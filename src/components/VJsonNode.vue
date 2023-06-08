@@ -150,14 +150,14 @@ export default {
   },
 
   methods: {
-    clipboardCopy() {
-      window.navigator.clipboard.writeText(this.value);
+    async clipboardCopy() {
+      await window.navigator.clipboard.writeText(this.value);
     },
 
-    clipboardCut() {
+    async clipboardCut() {
       if (!this.canDelete) return;
 
-      this.clipboardCopy();
+      await this.clipboardCopy();
 
       this.$emit("delete");
     },

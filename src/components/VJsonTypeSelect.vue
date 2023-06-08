@@ -23,6 +23,19 @@
           </v-btn>
         </template>
 
+        <v-btn v-if="canPaste"
+               icon tile
+               @click="clipboardPaste"
+        >
+          <v-icon>mdi-paste</v-icon>
+        </v-btn>
+
+        <v-text-field
+            v-else
+            style="width: 48px"
+            @input="$emit('create', $event)"
+        />
+
         <v-btn v-if="canDelete"
                icon tile
                @click="$emit('copy')"
@@ -61,6 +74,15 @@ export default {
   },
 
   computed: {
+    canPaste() {
+      try {
+        return typeof window.navigator.clipboard.readText === "function";
+      } catch (e) {
+        // Ignored
+      }
+      return false;
+    },
+
     types() {
       return ['string', 'number', 'boolean', 'Array', 'object', 'null'];
     },
@@ -132,6 +154,10 @@ export default {
         $event.preventDefault();
         this.create('null');
       }
+    },
+
+    async clipboardPaste() {
+      return window.navigator.clipboard.readText();
     },
 
     create(json) {
