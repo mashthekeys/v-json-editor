@@ -25,6 +25,21 @@
 
         <v-btn v-if="canDelete"
                icon tile
+               @click="$emit('copy')"
+        >
+          <v-icon>mdi-copy</v-icon>
+        </v-btn>
+
+        <v-btn v-if="canDelete"
+               icon tile
+               color="red"
+               @click="$emit('cut')"
+        >
+          <v-icon>mdi-cut</v-icon>
+        </v-btn>
+
+        <v-btn v-if="canDelete"
+               icon tile
                color="red"
                @click="$emit('delete')"
         >

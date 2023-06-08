@@ -4,6 +4,8 @@
         :can-delete="canDelete"
         :value="type"
         @create="$emit('input', $event)"
+        @copy="clipboardCopy"
+        @cut="clipboardCut"
         @delete="canDelete && $emit('delete')"
     />
 
@@ -144,6 +146,20 @@ export default {
         }
       }
       return "___invalid___"
+    },
+  },
+
+  methods: {
+    clipboardCopy() {
+      window.navigator.clipboard.writeText(this.value);
+    },
+
+    clipboardCut() {
+      if (!this.canDelete) return;
+
+      this.clipboardCopy();
+
+      this.$emit("delete");
     },
   },
 }
