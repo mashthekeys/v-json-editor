@@ -134,7 +134,7 @@ export default {
     getDefault(type) {
       return type === 'string' ? '""'
           : type === 'number' ? '0'
-              : type === 'boolean'? 'false'
+              : type === 'boolean'? 'true'
                   : type === 'Array'? '[]'
                       : type === 'object'? '{}'
                           : type === 'null' ? 'null'
