@@ -27,7 +27,7 @@
                icon tile
                @click="clipboardPaste"
         >
-          <v-icon>mdi-paste</v-icon>
+          <v-icon>mdi-content-paste</v-icon>
         </v-btn>
 
         <v-text-field
@@ -40,7 +40,7 @@
                icon tile
                @click="$emit('copy')"
         >
-          <v-icon>mdi-copy</v-icon>
+          <v-icon>mdi-content-copy</v-icon>
         </v-btn>
 
         <v-btn v-if="canDelete"
@@ -48,7 +48,7 @@
                color="red"
                @click="$emit('cut')"
         >
-          <v-icon>mdi-cut</v-icon>
+          <v-icon>mdi-content-cut</v-icon>
         </v-btn>
 
         <v-btn v-if="canDelete"
