@@ -1,5 +1,5 @@
 <template>
-  <v-menu bottom :nudge-bottom="36">
+  <v-menu bottom :nudge-bottom="36" v-model="isOpen">
     <template #activator="{attrs, on}">
       <v-btn icon tile
              color="primary"
@@ -32,8 +32,13 @@
 
         <v-text-field
             v-else
-            style="width: 48px"
-            @input="$emit('create', $event)"
+            dense
+            hide-details
+            prepend-inner-icon="mdi-content-paste"
+            style="width: 36px"
+            v-model="pasteValue"
+            @input="textFieldPaste"
+            @click.stop
         />
 
         <v-btn v-if="canDelete"
@@ -71,6 +76,13 @@ export default {
     canDelete: Boolean,
     closeButton: Boolean,
     value: {},
+  },
+  
+  data() {
+    return {
+      isOpen: false,
+      pasteValue: "",
+    };
   },
 
   computed: {
@@ -190,6 +202,12 @@ export default {
                       : type === 'object'? "mdi-code-braces"
                           : type === 'null' ? "mdi-null"
                               : "mdi-alert-box";
+    },
+
+    textFieldPaste(value) {
+      this.$emit("create", value);
+      this.pasteValue = "";
+      this.isOpen = false;
     },
   },
 }
