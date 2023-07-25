@@ -41,9 +41,8 @@
             @click.stop
         />
 
-        <v-btn v-if="canDelete"
-               icon tile
-               @click="close('copy')"
+        <v-btn icon tile
+               @click="$emit('copy')"
         >
           <v-icon>mdi-content-copy</v-icon>
         </v-btn>
