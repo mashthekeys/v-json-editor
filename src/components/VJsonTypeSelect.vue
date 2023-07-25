@@ -1,10 +1,5 @@
 <template>
-  <v-menu
-      bottom
-      :close-on-content-click="false"
-      :nudge-bottom="36"
-      v-model="isOpen"
-  >
+  <v-menu bottom :nudge-bottom="36" v-model="isOpen">
     <template #activator="{attrs, on}">
       <v-btn icon tile
              color="primary"
@@ -40,10 +35,10 @@
             dense
             hide-details
             prepend-inner-icon="mdi-content-paste"
-            class="v-json-type-select--pasteTarget"
             style="width: 36px"
-            v-model="pasteValue"
+            :value="pasteValue"
             @input="textFieldPaste"
+            @click.stop
         />
 
         <v-btn v-if="canDelete"
@@ -55,7 +50,8 @@
 
         <v-btn v-if="canDelete"
                icon tile
-               @click="close('cut')"
+               color="red"
+               @click="$emit('cut')"
         >
           <v-icon>mdi-content-cut</v-icon>
         </v-btn>
@@ -63,7 +59,7 @@
         <v-btn v-if="canDelete"
                icon tile
                color="red"
-               @click="close('delete')"
+               @click="$emit('delete')"
         >
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -132,7 +128,7 @@ export default {
         $event.stopPropagation();
         $event.preventDefault();
 
-        this.canDelete && this.close("delete");
+        this.canDelete && this.$emit("delete");
 
       } else if (charCode === 0x22) {
         // U+0022 QUOTATION MARK
@@ -173,13 +169,7 @@ export default {
     },
 
     async clipboardPaste() {
-      this.paste(await window.navigator.clipboard.readText());
-    },
-
-    close(event, value) {
-      if (event != null) this.$emit(event, value);
-
-      this.isOpen = false;
+      return window.navigator.clipboard.readText();
     },
 
     create(json) {
@@ -214,22 +204,13 @@ export default {
                               : "mdi-alert-box";
     },
 
-    paste(value) {
-      try {
-        // value is passed as-is if it can be parsed as JSON
-        JSON.parse(value);
-      } catch (jsonError) {
-        // Other values are converted to JSON string
-        value = JSON.stringify(String(value ?? ""));
-      }
-
-      this.close("create", value);
-    },
-
     textFieldPaste(value) {
-      this.paste(value);
+      this.$emit("create", value);
 
-      // Clearing value on same tick does not work
+      this.isOpen = false;
+
+      this.pasteValue = value;
+
       this.$nextTick(() => {
         this.pasteValue = "";
       });
@@ -252,9 +233,5 @@ export default {
   flex-flow: row wrap;
   width: calc(36px * 3);
   justify-items: flex-end;
-}
-
-.v-json-type-select--pasteTarget.v-text-field > .v-input__control > .v-input__slot::before {
-  content: none;
 }
 </style>
