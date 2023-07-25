@@ -89,7 +89,13 @@ export default {
     },
 
     dispatchInput() {
-      const output = this.output;
+      const output = this.getOutput();
+
+      if (typeof output === "undefined") {
+        this.lastOutput = output;
+        return;
+      }
+
       const old = this.lastOutput;
       // console.log("v-json-node-object.dispatchInput", output, old);
       if (output !== old && output !== this.value) {
@@ -97,6 +103,35 @@ export default {
         this.lastOutput = output;
         this.$emit("input", output);
       }
+    },
+
+    getOutput() {
+      const objectMembers = [];
+
+      const uniqueKeys = [];
+
+      let isValid = true;
+
+      for (let i = 0; i < this.nodes.length; i++) {
+        let {key, value} = this.nodes[i];
+
+        key = String(key);
+
+        if (uniqueKeys.includes(key)) {
+          isValid = false;
+          // Access all array members, even if not valid
+        }
+
+        uniqueKeys.push(key);
+
+        objectMembers.push(JSON.stringify(key) + ":" + value)
+      }
+
+      const output = !isValid ? undefined : `{${objectMembers.join(",")}}`;
+
+      // console.log("v-json-node-object.getOutput", output);
+
+      return output;
     },
 
     setValue(index, $event) {
@@ -149,13 +184,6 @@ export default {
           value: JSON.stringify(decoded[key]),
         };
       });
-    },
-
-    output() {
-      // console.log("v-json-node-object.output");
-      return `{${this.nodes.map(
-          ({key, value}) => JSON.stringify(key) + ":" + value
-      ).join(",")}}`
     },
   },
 
