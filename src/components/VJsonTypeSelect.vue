@@ -42,7 +42,7 @@
         />
 
         <v-btn icon tile
-               @click="$emit('copy')"
+               @click="close('copy')"
         >
           <v-icon>mdi-content-copy</v-icon>
         </v-btn>
@@ -50,7 +50,7 @@
         <v-btn v-if="canDelete"
                icon tile
                color="red"
-               @click="$emit('cut')"
+               @click="close('cut')"
         >
           <v-icon>mdi-content-cut</v-icon>
         </v-btn>
@@ -58,7 +58,7 @@
         <v-btn v-if="canDelete"
                icon tile
                color="red"
-               @click="$emit('delete')"
+               @click="close('delete')"
         >
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -127,7 +127,7 @@ export default {
         $event.stopPropagation();
         $event.preventDefault();
 
-        this.canDelete && this.$emit("delete");
+        this.canDelete && this.close("delete");
 
       } else if (charCode === 0x22) {
         // U+0022 QUOTATION MARK
@@ -171,6 +171,12 @@ export default {
       return window.navigator.clipboard.readText();
     },
 
+    close(event, eventParam) {
+      this.isOpen = false;
+
+      if (event != null) this.$emit(event, eventParam);
+    },
+
     create(json) {
       this.close('create', json);
     },
@@ -204,9 +210,7 @@ export default {
     },
 
     textFieldPaste(value) {
-      this.$emit("create", value);
-
-      this.isOpen = false;
+      this.close("create", value);
 
       this.pasteValue = value;
 
