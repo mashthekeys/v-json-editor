@@ -120,16 +120,15 @@ export default {
     dispatchInput() {
       const output = this.output;
       const old = this.lastOutput;
-      console.log("v-json-node-array.dispatchInput", output, old);
+      // console.log("v-json-node-array.dispatchInput", output, old);
       if (output !== old && output !== this.value) {
-        console.log("v-json-node-array.dispatchInput >> input");
         this.lastOutput = output;
         this.$emit("input", output);
       }
     },
 
     setValue(index, $event) {
-      console.log("v-json-node-array.setValue", index, $event);
+      // console.log("v-json-node-array.setValue", index, $event);
       this.nodes[index].value = String($event);
 
       this.dispatchInput();
